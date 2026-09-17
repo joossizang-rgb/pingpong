@@ -90,6 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <input type="password" id="reg-pw" class="w-full border border-gray-300 rounded-lg p-2">
                     </div>
                     <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">비밀번호 확인</label>
+                        <input type="password" id="reg-pw-confirm" class="w-full border border-gray-300 rounded-lg p-2">
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">닉네임</label>
                         <input type="text" id="reg-nickname" class="w-full border border-gray-300 rounded-lg p-2">
                     </div>
@@ -104,14 +108,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button id="btn-go-login" class="text-blue-600 hover:underline">로그인으로 돌아가기</button>
                     </div>
                 </div>
-            </div>`;
+            </div>\`;
 
         document.getElementById('btn-register').addEventListener('click', async () => {
             const id = document.getElementById('reg-id').value.trim();
             const pw = document.getElementById('reg-pw').value.trim();
+            const pwConfirm = document.getElementById('reg-pw-confirm').value.trim();
             const nickname = document.getElementById('reg-nickname').value.trim();
             const division = document.getElementById('reg-division').value;
-            if (!id || !pw || !nickname) return alert('모든 필수 항목을 입력해주세요.');
+            if (!id || !pw || !pwConfirm || !nickname) return alert('모든 필수 항목을 입력해주세요.');
+            if (pw !== pwConfirm) return alert('비밀번호가 일치하지 않습니다.');
             const { data: existing } = await sb.from('users').select('id').eq('id', id).single();
             if (existing) return alert('이미 존재하는 아이디입니다.');
             const { error } = await sb.from('users').insert({ id, password: pw, nickname, division });
@@ -251,8 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <button id="btn-save-profile" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold">저장하기</button>
                     <button id="btn-logout" class="w-full bg-gray-100 text-gray-600 py-2 rounded-lg font-semibold border border-gray-200">로그아웃</button>
+                    <button id="btn-delete-account" class="w-full bg-red-100 text-red-600 py-2 rounded-lg font-semibold border border-red-200 mt-4">회원탈퇴</button>
                 </div>
-            </div>`;
+            </div>\`;
         document.getElementById('btn-save-profile').addEventListener('click', async () => {
             const nickname = document.getElementById('prof-nickname').value;
             const division = document.getElementById('prof-division').value;
@@ -265,6 +272,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.removeItem('loggedInUser');
                 currentUser = null;
                 checkAuth();
+            }
+        });
+        document.getElementById('btn-delete-account').addEventListener('click', async () => {
+            if (confirm('정말로 회원탈퇴를 하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                const { error } = await sb.from('users').delete().eq('id', currentUser.id);
+                if (error) {
+                    alert('회원탈퇴 실패: ' + error.message);
+                } else {
+                    alert('회원탈퇴가 완료되었습니다.');
+                    localStorage.removeItem('loggedInUser');
+                    currentUser = null;
+                    checkAuth();
+                }
             }
         });
     }
