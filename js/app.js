@@ -22,11 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── 인증 ──────────────────────────────────────────────
     async function checkAuth() {
-        const userId = localStorage.getItem('loggedInUser');
-        if (userId) {
-            const { data } = await sb.from('users').select('*').eq('id', userId).single();
-            if (data) { currentUser = data; showApp(); return; }
-            localStorage.removeItem('loggedInUser');
+        try {
+            const userId = localStorage.getItem('loggedInUser');
+            if (userId) {
+                const { data, error } = await sb.from('users').select('*').eq('id', userId).single();
+                if (data) { currentUser = data; showApp(); return; }
+                localStorage.removeItem('loggedInUser');
+            }
+        } catch (err) {
+            console.error('인증 확인 중 오류 발생:', err);
+            // 네트워크 오류 등 예외 발생 시 로그인 화면으로 이동하거나 재시도 안내
         }
         showLogin();
     }
@@ -149,22 +154,29 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadView(viewName) {
         currentView = viewName;
         showLoading();
-        if (viewName === 'schedules') {
-            btnCreateSchedule.classList.remove('hidden');
-            const { data } = await sb.from('schedules').select(`*, participants(user_id, users(nickname, division))`).order('created_at', { ascending: false });
-            schedules = (data || []).map(s => ({
-                ...s,
-                participants: s.participants.map(p => ({ id: p.user_id, nickname: p.users?.nickname || '?', division: p.users?.division || '' }))
-            }));
-            renderSchedules();
-        } else if (viewName === 'tournaments') {
-            btnCreateSchedule.classList.add('hidden');
-            const { data } = await sb.from('tournaments').select('*').order('created_at', { ascending: false });
-            tournaments = data || [];
-            renderTournaments();
-        } else if (viewName === 'profile') {
-            btnCreateSchedule.classList.add('hidden');
-            renderProfile();
+        try {
+            if (viewName === 'schedules') {
+                btnCreateSchedule.classList.remove('hidden');
+                const { data, error } = await sb.from('schedules').select(`*, participants(user_id, users(nickname, division))`).order('created_at', { ascending: false });
+                if (error) throw error;
+                schedules = (data || []).map(s => ({
+                    ...s,
+                    participants: s.participants ? s.participants.map(p => ({ id: p.user_id, nickname: p.users?.nickname || '?', division: p.users?.division || '' })) : []
+                }));
+                renderSchedules();
+            } else if (viewName === 'tournaments') {
+                btnCreateSchedule.classList.add('hidden');
+                const { data, error } = await sb.from('tournaments').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                tournaments = data || [];
+                renderTournaments();
+            } else if (viewName === 'profile') {
+                btnCreateSchedule.classList.add('hidden');
+                renderProfile();
+            }
+        } catch (err) {
+            console.error('데이터 로드 오류:', err);
+            appContent.innerHTML = '<div class="text-center mt-10 text-red-500">데이터를 불러오지 못했습니다.<br>네트워크 상태를 확인해주세요.</div>';
         }
     }
 
