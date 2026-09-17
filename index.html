@@ -2,69 +2,102 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>핑퐁메이트 - 탁구 일정 공유 플랫폼</title>
+    <!-- Pretendard Font -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased h-screen flex flex-col overflow-hidden">
+<body class="bg-slate-100 text-slate-800 antialiased h-screen flex flex-col justify-center items-center overflow-hidden">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center space-y-2 pointer-events-none max-w-sm w-full px-4"></div>
 
     <!-- Auth Container (Login / Register) -->
-    <div id="auth-container" class="fixed inset-0 bg-white z-50 flex flex-col justify-center items-center p-4 hidden">
+    <div id="auth-container" class="fixed inset-0 bg-slate-50 z-50 flex flex-col justify-center items-center p-4 overflow-y-auto hidden">
         <!-- Auth content injected by JS -->
     </div>
 
-    <!-- App Container -->
-    <div id="app-container" class="h-full flex flex-col w-full">
+    <!-- App Shell (Mobile Frame on Desktop) -->
+    <div id="app-container" class="h-full flex flex-col w-full sm:max-w-md bg-slate-50 sm:shadow-2xl sm:border-x sm:border-slate-200/70 relative overflow-hidden">
         <!-- Header -->
-        <header class="bg-blue-600 text-white shadow-md z-10 flex-shrink-0">
-            <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
-                <h1 class="text-xl font-bold"><i class="fa-solid fa-table-tennis-paddle-ball mr-2"></i>핑퐁메이트</h1>
-                <button id="btn-create-schedule" class="bg-white text-blue-600 px-3 py-1 rounded-full text-sm font-semibold shadow hidden">
-                    <i class="fa-solid fa-plus mr-1"></i>일정 등록
+        <header class="bg-gradient-to-r from-blue-600 via-blue-600 to-indigo-600 text-white shadow-sm z-10 flex-shrink-0">
+            <div class="px-4 py-3.5 flex justify-between items-center">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white shadow-inner">
+                        <i class="fa-solid fa-table-tennis-paddle-ball text-sm"></i>
+                    </div>
+                    <span class="text-lg font-black tracking-tight drop-shadow-sm">핑퐁메이트</span>
+                </div>
+                <button id="btn-create-schedule" class="bg-white text-blue-600 hover:bg-blue-50 active:scale-95 px-3.5 py-1.5 rounded-full text-xs font-bold shadow-sm transition-all hidden items-center gap-1.5">
+                    <i class="fa-solid fa-plus text-[11px]"></i>
+                    <span>일정 등록</span>
                 </button>
             </div>
         </header>
 
         <!-- Main Content Area -->
-        <main id="app-content" class="flex-grow overflow-y-auto max-w-md mx-auto w-full relative pb-20 p-4">
+        <main id="app-content" class="flex-grow overflow-y-auto w-full relative pb-20 p-4">
             <!-- Content will be injected here by JS -->
         </main>
 
         <!-- Bottom Navigation -->
-        <nav class="bg-white border-t border-gray-200 fixed bottom-0 w-full z-10 sm:max-w-md sm:left-1/2 sm:-translate-x-1/2">
-            <div class="flex justify-around items-center h-16">
-                <button class="nav-btn flex flex-col items-center text-blue-600 w-full" data-target="schedules">
-                    <i class="fa-solid fa-calendar-check text-xl mb-1"></i>
-                    <span class="text-xs">일정</span>
+        <nav class="bg-white/95 backdrop-blur-md border-t border-slate-200/80 fixed bottom-0 w-full z-10 sm:max-w-md sm:left-1/2 sm:-translate-x-1/2 shadow-lg">
+            <div class="flex justify-around items-center h-16 px-3">
+                <button class="nav-btn flex flex-col items-center justify-center py-1 text-blue-600 w-full transition-all" data-target="schedules">
+                    <div class="w-9 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+                        <i class="fa-solid fa-calendar-check text-lg"></i>
+                    </div>
+                    <span class="text-[11px] font-bold tracking-tight">일정</span>
                 </button>
-                <button class="nav-btn flex flex-col items-center text-gray-400 w-full" data-target="tournaments">
-                    <i class="fa-solid fa-trophy text-xl mb-1"></i>
-                    <span class="text-xs">대회</span>
+                <button class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-600 w-full transition-all" data-target="tournaments">
+                    <div class="w-9 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+                        <i class="fa-solid fa-trophy text-lg"></i>
+                    </div>
+                    <span class="text-[11px] font-medium tracking-tight">대회</span>
                 </button>
-                <button class="nav-btn flex flex-col items-center text-gray-400 w-full" data-target="profile">
-                    <i class="fa-solid fa-user text-xl mb-1"></i>
-                    <span class="text-xs">내 정보</span>
+                <button class="nav-btn flex flex-col items-center justify-center py-1 text-slate-400 hover:text-slate-600 w-full transition-all" data-target="profile">
+                    <div class="w-9 h-7 rounded-full flex items-center justify-center mb-0.5 transition-colors">
+                        <i class="fa-solid fa-user text-lg"></i>
+                    </div>
+                    <span class="text-[11px] font-medium tracking-tight">내 정보</span>
                 </button>
             </div>
         </nav>
     </div>
 
-    <!-- Modals (Chat, Form, etc.) will be dynamically added or hidden here -->
-    <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex-col justify-end sm:justify-center items-center pb-0 sm:pb-10">
-        <div id="modal-content" class="bg-white w-full max-w-md sm:rounded-xl rounded-t-xl h-[90vh] sm:h-auto sm:max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
-            <!-- Injected -->
+    <!-- Modals (Chat, Form, Detail, etc.) -->
+    <div id="modal-container" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex-col justify-end sm:justify-center items-center pb-0 sm:pb-6 transition-all duration-300">
+        <div id="modal-content" class="bg-white w-full max-w-md sm:rounded-2xl rounded-t-3xl h-[90vh] sm:h-auto sm:max-h-[88vh] flex flex-col overflow-hidden shadow-2xl border border-slate-100">
+            <!-- Injected by JS -->
         </div>
     </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <!-- <script src="js/mockData.js"></script> --> <!-- 더이상 mockData를 사용하지 않으므로 주석 처리 -->
     <script src="js/app.js"></script>
 </body>
 </html>

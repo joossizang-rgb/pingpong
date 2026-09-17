@@ -1,49 +1,155 @@
-/* Add any custom animations or overrides here */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #eff6ff;
+}
+
+* {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    letter-spacing: -0.02em;
+}
+
 body {
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+input, textarea, select {
+    user-select: auto;
 }
 
 /* Hide scrollbar for cleaner look on mobile */
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
+    height: 5px;
 }
 ::-webkit-scrollbar-track {
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
     background: #cbd5e1;
-    border-radius: 4px;
+    border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
 
+/* Animations */
 .modal-enter {
-    animation: slideUp 0.3s ease-out forwards;
+    animation: slideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .modal-exit {
-    animation: slideDown 0.3s ease-in forwards;
+    animation: slideDown 0.22s cubic-bezier(0.7, 0, 0.84, 0) forwards;
 }
 
 @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
+    from {
+        transform: translateY(100%);
+        opacity: 0.9;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 @keyframes slideDown {
-    from { transform: translateY(0); }
-    to { transform: translateY(100%); }
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100%);
+        opacity: 0.9;
+    }
 }
 
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes toastOut {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.95);
+    }
+}
+
+.toast-animate-in {
+    animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-animate-out {
+    animation: toastOut 0.25s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+}
+
+/* Pulse animation for recruitment badge */
+@keyframes pulseDot {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.4;
+        transform: scale(0.85);
+    }
+}
+
+.animate-pulse-dot {
+    animation: pulseDot 1.8s infinite ease-in-out;
+}
+
+/* Chat bubble styling */
 .chat-bubble-me {
-    background-color: #3b82f6;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     color: white;
-    border-radius: 1rem 1rem 0 1rem;
+    border-radius: 18px 18px 4px 18px;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.15);
 }
 
 .chat-bubble-other {
-    background-color: #f1f5f9;
+    background-color: #ffffff;
     color: #1e293b;
-    border-radius: 1rem 1rem 1rem 0;
+    border-radius: 18px 18px 18px 4px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Modern focus ring style */
+.input-focus-ring {
+    transition: all 0.15s ease-in-out;
+}
+.input-focus-ring:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Tap effects */
+.tap-scale {
+    transition: transform 0.12s ease;
+}
+.tap-scale:active {
+    transform: scale(0.97);
+}
+
+/* Subtle glassmorphism card */
+.glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
