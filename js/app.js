@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button id="btn-go-login" class="text-blue-600 hover:underline">로그인으로 돌아가기</button>
                     </div>
                 </div>
-            </div>\`;
+            </div>`;
 
         document.getElementById('btn-register').addEventListener('click', async () => {
             const id = document.getElementById('reg-id').value.trim();
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button id="btn-logout" class="w-full bg-gray-100 text-gray-600 py-2 rounded-lg font-semibold border border-gray-200">로그아웃</button>
                     <button id="btn-delete-account" class="w-full bg-red-100 text-red-600 py-2 rounded-lg font-semibold border border-red-200 mt-4">회원탈퇴</button>
                 </div>
-            </div>\`;
+            </div>`;
         document.getElementById('btn-save-profile').addEventListener('click', async () => {
             const nickname = document.getElementById('prof-nickname').value;
             const division = document.getElementById('prof-division').value;
