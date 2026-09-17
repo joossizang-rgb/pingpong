@@ -1,0 +1,49 @@
+/* Add any custom animations or overrides here */
+body {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbar for cleaner look on mobile */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.modal-enter {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+.modal-exit {
+    animation: slideDown 0.3s ease-in forwards;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+}
+
+.chat-bubble-me {
+    background-color: #3b82f6;
+    color: white;
+    border-radius: 1rem 1rem 0 1rem;
+}
+
+.chat-bubble-other {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    border-radius: 1rem 1rem 1rem 0;
+}
